@@ -64,7 +64,48 @@ namespace CatCards.Controllers
 
             return card;
         }
+        [HttpPost]
+        public ActionResult<CatCard> SaveCard(CatCard card)
+        {
+            CatCard saved = cardDao.SaveCard(card);
 
+            return Created($"/api/cards/{saved.CatCardId}", saved);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult<CatCard> UpdateCard(int id, CatCard card)
+        {
+
+            bool updated = cardDao.UpdateCard(card);
+
+            if (!updated)
+            {
+                return NotFound();
+            } else
+            {
+                return NoContent();
+            }
+           
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteCard(int id)
+        {
+            bool deleted = cardDao.RemoveCard(id);
+
+            if (!deleted)
+            {
+                return NotFound();
+            } else if (deleted)
+            {
+                return NoContent();
+            } else
+            {
+                return StatusCode(500);
+            }
+           
+            
+        }
         
 
     }
