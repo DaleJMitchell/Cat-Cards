@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CatCards.DAO;
 using CatCards.Models;
 using CatCards.Services;
@@ -20,6 +21,21 @@ namespace CatCards.Controllers
             catPicService = _catPic;
             cardDao = _cardDao;
         }
+        [HttpGet]
+
+        public ActionResult<List<CatCard>> GetAllCards()
+        {
+            List<CatCard> cards = cardDao.GetAllCards();
+            if(cards != null)
+            {
+                return cards;
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
 
 
         [HttpGet("{id}")]
@@ -35,6 +51,21 @@ namespace CatCards.Controllers
                 return NotFound();
             }
         }
+        [HttpGet("random")]
+
+        public ActionResult<CatCard> NewCard()
+        {
+            CatCard card = new CatCard();
+            CatFact fact = catFactService.GetFact();
+            card.CatFact = fact.Text;
+            CatPic pic = catPicService.GetPic();
+            card.ImgUrl = pic.File;
+            //card.ImgUrl = Convert.ToString(catPicService.GetPic());
+
+            return card;
+        }
+
+        
 
     }
 }

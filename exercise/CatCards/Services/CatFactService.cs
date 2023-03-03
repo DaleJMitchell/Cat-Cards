@@ -1,16 +1,28 @@
 ﻿using CatCards.Models;
 using RestSharp;
+using System.Net.Http;
 
 namespace CatCards.Services
 {
     public class CatFactService : ICatFactService
     {
         private static readonly string API_URL = "https://cat-data.netlify.app/api/facts/random";
-        private readonly RestClient client = new RestClient();
+        private readonly RestClient client = new RestClient(API_URL);
 
         public CatFact GetFact()
         {
-            throw new System.NotImplementedException();
+            
+            RestRequest request= new RestRequest();
+            IRestResponse<CatFact> response = client.Get<CatFact>(request);
+
+            if (!response.IsSuccessful)
+            {
+                throw new HttpRequestException();
+
+            }
+
+            return response.Data;
+            
         }
     }
 }
